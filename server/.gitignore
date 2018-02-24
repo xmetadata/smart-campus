@@ -1,5 +1,6 @@
 #Flask
-config.py
+#config.py
+.idea/
 migrations/
 
 # Byte-compiled / optimized / DLL files
