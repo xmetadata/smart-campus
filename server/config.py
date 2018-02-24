@@ -15,7 +15,7 @@ SECRET_KEY = "SOME SECRET"
 JWT_EXPIRATION_DELTA = timedelta(seconds=3600)
 
 # MySQL
-SQLALCHEMY_DATABASE_URI = "mysql+pymysql://{DB_USER}:{DB_PASS}@{DB_ADDR}/{DB_NAME}".format(DB_USER=DB_USER,
+SQLALCHEMY_DATABASE_URI = "mysql://{DB_USER}:{DB_PASS}@{DB_ADDR}/{DB_NAME}".format(DB_USER=DB_USER,
                                                                                            DB_PASS=DB_PASS,
                                                                                            DB_ADDR=DB_ADDR,
                                                                                            DB_NAME=DB_NAME)
