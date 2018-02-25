@@ -22,5 +22,8 @@ class UserRegister(Resource):
             return {"message": "User already exists."}, 400
 
         user = UserModel(data['username'], data['password'])
-        user.add(user)
-        return {"message": "User created successfully."}, 201
+        result, message = user.add(user)
+        if result:
+            return message, 201
+        else:
+            return message, 401

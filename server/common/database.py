@@ -9,23 +9,20 @@ class CRUD():
         try:
             db.session.add(resource)
             db.session.commit()
-            return True
+            return True, 'resource created successfully.'
         except SQLAlchemyError as e:
-            db.session.rollback()
-            return False
+            return False, e.message
 
     def update(self):
         try:
             db.session.commit()
-            return True
+            return True, 'resource updated successfully.'
         except SQLAlchemyError as e:
-            db.session.rollback()
-            return False
+            return False, e.message
 
     def delete(self, resource):
         try:
             db.session.delete(resource)
-            return True
+            return True, 'resource deleted successfully.'
         except SQLAlchemyError as e:
-            db.session.rollback()
-            return False
+            return False, e.message
