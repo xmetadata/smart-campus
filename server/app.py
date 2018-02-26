@@ -9,6 +9,8 @@ from resources.user import UserRegister
 app = Flask(__name__)
 app.config.from_object('config')
 
+db.init_app(app)
+
 api = Api(app)
 
 jwt = JWT(app, authenticate, identity)
@@ -18,7 +20,6 @@ api.add_resource(ItemList, '/item')
 api.add_resource(UserRegister, '/register')
 
 if __name__ == '__main__':
-    db.init_app(app)
     app.run(host=app.config['HOST'],
             port=app.config['PORT'],
             debug=app.config['DEBUG'])
