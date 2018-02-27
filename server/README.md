@@ -11,7 +11,7 @@
 >
 > /usr/bin/gunicorn -w 4 -b 0.0.0.0:5000 app:app
 
-## Http status code
+## HTTP Status Code
 > 200 （成功） 服务器已成功处理了请求。通常，这表示服务器提供了请求的网页。
 >
 > 201 （已创建） 请求成功并且服务器创建了新的资源。
