@@ -3,8 +3,8 @@ from flask_jwt import JWT
 from flask_restful import Api
 from common.database import db
 from common.security import authenticate, identity
-from resources.item import Item, ItemList
-from resources.user import UserRegister
+from resources.item import ItemList, ItemDetail
+from resources.user import UserList, UserDetail
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -15,9 +15,10 @@ api = Api(app)
 
 jwt = JWT(app, authenticate, identity)
 
-api.add_resource(Item, '/item/<string:name>')
-api.add_resource(ItemList, '/item')
-api.add_resource(UserRegister, '/register')
+api.add_resource(ItemDetail, '/user/<int:user_id>/item/<int:id>')
+api.add_resource(ItemList, '/user/<int:user_id>/item')
+api.add_resource(UserList, '/user')
+api.add_resource(UserDetail, '/user/<int:id>')
 
 if __name__ == '__main__':
     app.run(host=app.config['HOST'],

@@ -6,14 +6,14 @@ PORT = 5000
 HOST = "127.0.0.1"
 
 # JWT
-SECRET_KEY = "SOME SECRET"
+SECRET_KEY = "smart-campus is supported by xmetadata"
 JWT_EXPIRATION_DELTA = timedelta(seconds=3600)
 
 # MYSQL
 DB_USER = 'root'
 DB_PASS = ''
 DB_NAME = 'smart-campus'
-DB_ADDR = 'localhost'
+DB_ADDR = '127.0.0.1'
 
 SQLALCHEMY_ECHO = True
 SQLALCHEMY_TRACK_MODIFICATIONS = True
