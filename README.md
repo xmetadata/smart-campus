@@ -1,3 +1,13 @@
 # Smart Campus
 
-智慧校园
+## api
+
+API Server
+
+## portal
+
+Wechat Portal
+
+## portaladmin
+
+Admin Portal
