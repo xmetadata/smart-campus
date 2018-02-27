@@ -1,10 +1,13 @@
 # Smart Campus Server
 
 ## Install
-+ gedit config.py
-+ python migrate.py db init
-+ python migrate.py db migrate
-+ python migrate.py db upgrade
+```
+gedit config.py
+python migrate.py db init
+python migrate.py db migrate
+python migrate.py db upgrade
+python app.py
+```
 
 ## Running
 > Nginx + Gunicorn/Supervisor + Flask-RESTful
