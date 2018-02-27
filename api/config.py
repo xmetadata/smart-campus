@@ -6,7 +6,7 @@ PORT = 5000
 HOST = "127.0.0.1"
 
 # JWT
-SECRET_KEY = "smart-campus is drived by xmetadata"
+SECRET_KEY = "smart-campus is supported by xmetadata"
 JWT_EXPIRATION_DELTA = timedelta(seconds=3600)
 
 # MYSQL
