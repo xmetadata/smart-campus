@@ -1,0 +1,29 @@
+Patriarch:
+id vip_type vip_init vip_finish student_id create_time 
+VipType:
+id price during description
+AskForLeave:
+id type reason create_time finish_time patriarch_id teacher_id confirm_time
+Atendance:
+id image student_id atendance_time teacher_id
+Payment:
+id payment_id payment_time finish_time confirm_time student_id teacher_id
+PaymentType:
+id pay_name amount finish_time
+Homework:
+id subject_type image class_id release_time
+
+Province:
+id province_name
+City:
+id city_name province_id
+Town:
+id town_name city_id province_id
+School:
+id area_id school_name superintendent phone
+GradeType:
+id grade_name superintendent phone
+Class:
+id grade_id school_id class_name superintendent phone
+Student:
+id school_id grade_id class_id name patriarch_name patriarch_phone
