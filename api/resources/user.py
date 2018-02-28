@@ -27,5 +27,5 @@ class UserDetail(Resource):
             return MSG403, 403
         user_detail = UserModel.query.get_or_404(id)
         dump_user, errors = UserSchema().dump(user_detail)
-        dump_item, errors = ItemSchema(many=True).dump(user_detail.item.all())
+        dump_item, errors = ItemSchema(many=True, exclude('user',)).dump(user_detail.item.all())
         return {'user': dump_user, 'item': dump_item}, 200
