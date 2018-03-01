@@ -3,4 +3,6 @@ Flask-RESTful
 Flask-JWT
 Flask-SQLAlchemy
 marshmallow
-
+Flask-Marshmallow
+flask-script
+flask-migrate
