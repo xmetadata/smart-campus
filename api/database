@@ -32,7 +32,16 @@ Class:
 id class_name grade_id school_id superintendent contact
 Student:
 id name class_id grade_id school_id sex age address identity_card campus_id
-Privilege:
-id name
+Prtriarch:
+id name address contact
+Student2Prtriarch:
+id student_id patriarch_id
+
+
 Admin:
-id privilege_id username password 
+
+User:
+id name pwd role_id
+Role:
+id name remarks
+Role2Auth:
