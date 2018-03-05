@@ -45,3 +45,8 @@ id name pwd role_id
 Role:
 id name remarks
 Role2Auth:
+
+Mixin:
+root_id parent_id left right level
+TreeModel:
+id name sex age address identify_card campus_id contact
