@@ -46,18 +46,28 @@ class TreeManager:
     def delete_node(self, node_id=-1):
         tmp_session = self.__session
         tmp_model   = self.__model
-        if node_id == -1:
-            return False
-        else:
-            node = tmp_model.query.filter(tmp_model.node_id==node_id).one()
-            if node is None:
+        if isinstance(node_id, int):
+            if node_id == -1:
                 return False
             else:
-                tmp_model.query.filter(tmp_model.left>=node.left,tmp_model.right<=node.right).delete()
-                tmp_model.query.filter(tmp_model.left>node.right).update({tmp_model.left:tmp_model.left-(node.right-node.left)-1})
-                tmp_model.query.filter(tmp_model.right>node.right).update({tmp_model.right:tmp_model.right-(node.right-node.left)-1})
-                tmp_session.commit()
-                return True
+                node = tmp_model.query.filter(tmp_model.node_id==node_id).one()
+                if node is None:
+                    return False
+                else:
+                    tmp_model.query.filter(tmp_model.left>=node.left,tmp_model.right<=node.right).delete()
+                    tmp_model.query.filter(tmp_model.left>node.right).update({tmp_model.left:tmp_model.left-(node.right-node.left)-1})
+                    tmp_model.query.filter(tmp_model.right>node.right).update({tmp_model.right:tmp_model.right-(node.right-node.left)-1})
+                    tmp_session.commit()
+                    return True
+        else:
+            return False
+    def delete_nodes(self, node_ids=None):
+        if not isinstance(node_ids, list):
+            return False
+        else:
+            for id in node_ids:
+                self.delete_node(id)
+            return True
     """find one node or many nodes"""
     def find_node(self, node_id=-1, many=False):
         tmp_session = self.__session
@@ -78,12 +88,14 @@ class TreeManager:
         else:
             tmp_session.commit()
 
-class MenuList(db.Model):
-    __tablename__   = "MenuList"
+class TreeMixin:
     node_id         = db.Column(db.Integer, autoincrement=True, primary_key=True)
     parent_id       = db.Column(db.Integer, default=0)
     left            = db.Column(db.Integer, default=0)
     right           = db.Column(db.Integer, default=0)
+
+class MenuList(db.Model, TreeMixin):
+    __tablename__   = "MenuList"
     name            = db.Column(db.String(80), nullable=False)
     sex             = db.Column(db.Integer, default=0)
     age             = db.Column(db.Integer, default=0)
