@@ -56,6 +56,8 @@ class TreeManager:
                 tmp_model.query.filter(tmp_model.left>=node.left,tmp_model.right<=node.right).delete()
                 tmp_model.query.filter(tmp_model.left>node.right).update({tmp_model.left:tmp_model.left-(node.right-node.left)-1})
                 tmp_model.query.filter(tmp_model.right>node.right).update({tmp_model.right:tmp_model.right-(node.right-node.left)-1})
+                tmp_session.commit()
+                return True
     """find one node or many nodes"""
     def find_node(self, node_id=-1, many=False):
         tmp_session = self.__session
@@ -63,7 +65,7 @@ class TreeManager:
         if node_id == -1:
             return None
         else:
-            node = tmp_model.query.filter(tmp_model.node_id==node_id).one()
+            node = tmp_model.query.filter(tmp_model.node_id==node_id).first()
             if many:
                 return tmp_model.query.filter(tmp_model.left>=node.left,tmp_model.right<=node.right).all()
             else:
@@ -74,7 +76,7 @@ class TreeManager:
         if node is None:
             return False
         else:
-            tmp_session.update()
+            tmp_session.commit()
 
 class MenuList(db.Model):
     __tablename__   = "MenuList"
