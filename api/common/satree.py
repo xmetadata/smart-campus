@@ -1,6 +1,8 @@
 from sqlalchemy import func
-from database import db
+from flask_sqlalchemy import SQLAlchemy
 import uuid
+
+db=SQLAlchemy()
 
 class TreeManager:
     def __init__(self, model_obj=None, session=None):
@@ -13,71 +15,73 @@ class TreeManager:
             return tmp_session.query.filter(tmp_model.parent_id==0).all()
         else:
             return tmp_session.query.filter(tmp_model.root_id==node.root_id,tmp_model.parent_id==0).first()
-    def add_node(self, root_id=-1, node=None, level=0):
+    def add_node(self, node_id=-1, node=None):
         tmp_session = self.__session
         tmp_model   = self.__model
         if node is None:
             return False
         """add node as root"""
-        if root_id == -1:
-            last_root = tmp_session.filter(func.max(tmp_model.root_id)).first()
+        if node_id == -1:
             node.parent_id = 0
             node.left      = 0
             node.right     = 1
-            node.level     = 0
-            if last_root is None:
-                node.root_id = 0
-            else:
-                node.root_id = last_root.root_id + 1
             tmp_session.add(node)
             tmp_session.commit()
             return True
         else:
-            if level == 0:
+            opt_node = tmp_model.query.filter(tmp_model.node_id==node_id).first()
+            if opt_node is None:
                 return False
             else:
-                root       = tmp_session.query.filter(tmp_model.root_id==root_id,tmp_model.parent_id==0).one()
-                node_level = tmp_session.query.filter(tmp_model.root_id==root_id,tmp_model.level==level).last()
-                if node_level is None:
-                    """add the node as second node of the tree"""
-                    node.root_id   = root.root_id
-                    node.parent_id = root.root_id
-                    node.left      = root.left + 1
-                    node.right     = root.left + 2
-                    node.level     = level
-                    tmp_session.add(node)
-                    tmp_session.commit()
-                    root.right = root.right + 2
-                    tmp_session.update()
-                    return True
-                else:
-                    """add the node as last one at the level"""
-                    node.root_id   = node_level.root_id
-                    node.parent_id = node_level.parent_id
-                    node.left      = node_level.right + 1
-                    node.right     = node_level.right + 2
-                    node.level     = level
-                    nodes = tmp_session.query.filter(tmp_model.left>next_node.right).all()
-                    for iter_node in nodes:
-                        iter_node.left  = iter_node.left + 2
-                        iter_node.right = iter_node.right + 2
-                    ref_node.right = ref_node.right + 2
-                    tmp_session.update()
-                    tmp_session.add(node)
-                    tmp_session.commit()
-                    return True
-    def delete_node(self, ref_node):
-
-
+                """add node as the last node of the same level"""
+                node.parent_id = opt_node.node_id
+                node.left      = opt_node.right
+                node.right     = opt_node.right + 1
+                tmp_model.query.filter(tmp_model.right>=opt_node.right).update({tmp_model.right:tmp_model.right+2})
+                tmp_model.query.filter(tmp_model.left>opt_node.right).update({tmp_model.right:tmp_model.right+2})
+                tmp_session.add(node)
+                tmp_session.commit()
+                return True
+    """delete node and children"""
+    def delete_node(self, node_id=-1):
+        tmp_session = self.__session
+        tmp_model   = self.__model
+        if node_id == -1:
+            return False
+        else:
+            node = tmp_model.query.filter(tmp_model.node_id==node_id).one()
+            if node is None:
+                return False
+            else:
+                tmp_model.query.filter(tmp_model.left>=node.left,tmp_model.right<=node.right).delete()
+                tmp_model.query.filter(tmp_model.left>node.right).update({tmp_model.left:tmp_model.left-(node.right-node.left)-1})
+                tmp_model.query.filter(tmp_model.right>node.right).update({tmp_model.right:tmp_model.right-(node.right-node.left)-1})
+    """find one node or many nodes"""
+    def find_node(self, node_id=-1, many=False):
+        tmp_session = self.__session
+        tmp_model   = self.__model
+        if node_id == -1:
+            return None
+        else:
+            node = tmp_model.query.filter(tmp_model.node_id==node_id).one()
+            if many:
+                return tmp_model.query.filter(tmp_model.left>=node.left,tmp_model.right<=node.right).all()
+            else:
+                return node
+    """update node"""
+    def update_node(self, node=None):
+        tmp_session = self.__session
+        if node is None:
+            return False
+        else:
+            tmp_session.update()
 
 class MenuList(db.Model):
-    root_id         = db.Column(db.Integer, default=0)
+    __tablename__   = "MenuList"
+    node_id         = db.Column(db.Integer, autoincrement=True, primary_key=True)
     parent_id       = db.Column(db.Integer, default=0)
-    id              = db.Column(db.Integer, default=0, primary_key=True)
     left            = db.Column(db.Integer, default=0)
     right           = db.Column(db.Integer, default=0)
-    level           = db.Column(db.Integer, default=0)
-
     name            = db.Column(db.String(80), nullable=False)
     sex             = db.Column(db.Integer, default=0)
     age             = db.Column(db.Integer, default=0)
