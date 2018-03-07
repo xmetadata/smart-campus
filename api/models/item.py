@@ -1,5 +1,6 @@
 from marshmallow import Schema, fields
 from common.database import db, CRUD
+from common.schema import ma
 from models.user import UserSchema
 
 
@@ -17,8 +18,11 @@ class ItemModel(db.Model, CRUD):
         self.price = price
         self.user_id = user_id
 
-
-class ItemSchema(Schema):
-    name = fields.String(required=True)
-    price = fields.Float(required=True)
-    user = fields.Nested(UserSchema)
+class ItemSchema(ma.Schema):
+    class meta:
+        fields=('name', 'price', 'user')
+    user=ma.Nested(UserSchema)
+#class ItemSchema(Schema):
+#    name = fields.String(required=True)
+#    price = fields.Float(required=True)
+#    user = fields.Nested(UserSchema)

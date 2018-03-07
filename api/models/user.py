@@ -1,6 +1,7 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from marshmallow import Schema, fields
 from common.database import db, CRUD
+from common.schema import ma
 import datetime
 
 
@@ -35,8 +36,10 @@ class UserModel(db.Model, CRUD):
     def find_by_id(cls, _id):
         return cls.query.filter_by(id=_id).first()
 
-
-class UserSchema(Schema):
-    username = fields.String(required=True)
-    password = fields.String(required=True, load_only=True)
-    creation_datetime = fields.DateTime(dump_only=True)
+class UserSchema(ma.Schema):
+    class meta:
+        fields=('username', 'password', 'creation_datetime')
+#class UserSchema(Schema):
+#    username = fields.String(required=True)
+#    password = fields.String(required=True, load_only=True)
+#    creation_datetime = fields.DateTime(dump_only=True)

@@ -2,6 +2,7 @@ from flask import Flask
 from flask_jwt import JWT
 from flask_restful import Api
 from common.database import db
+from common.schema import ma
 from common.security import authenticate, identity
 from resources.item import ItemList, ItemDetail
 from resources.user import UserList, UserDetail
@@ -10,6 +11,7 @@ app = Flask(__name__)
 app.config.from_object('config')
 
 db.init_app(app)
+ma.init_app(app)
 
 api = Api(app)
 

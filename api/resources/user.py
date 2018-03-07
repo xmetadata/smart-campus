@@ -1,10 +1,9 @@
 from flask_restful import Resource, request
 from flask_jwt import jwt_required, current_identity
 from models.user import UserModel, UserSchema
-from models.item import ItemSchema, ItemModel
+from models.item import ItemModel, ItemSchema
 from sqlalchemy.exc import SQLAlchemyError
 from common.message import MSG201, MSG403
-
 
 class UserList(Resource):
     def post(self):
@@ -19,7 +18,6 @@ class UserList(Resource):
             return e.message, 500
         return MSG201, 201
 
-
 class UserDetail(Resource):
     @jwt_required()
     def get(self, id):
@@ -27,5 +25,5 @@ class UserDetail(Resource):
             return MSG403, 403
         user_detail = UserModel.query.get_or_404(id)
         dump_user, errors = UserSchema().dump(user_detail)
-        dump_item, errors = ItemSchema(many=True, exclude('user',)).dump(user_detail.item.all())
+        dump_item, errors = ItemSchema(many=True, exclude=('user',)).dump(user_detail.item.all())
         return {'user': dump_user, 'item': dump_item}, 200

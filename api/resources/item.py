@@ -1,8 +1,8 @@
 from flask_restful import Resource, request
 from flask_jwt import jwt_required, current_identity
 from sqlalchemy.exc import SQLAlchemyError
-from models.item import ItemModel, ItemSchema
 from models.user import UserModel, UserSchema
+from models.item import ItemModel, ItemSchema
 from common.message import MSG201, MSG204, MSG403
 
 
