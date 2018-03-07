@@ -1,7 +1,17 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from flask_restful import Api
-from satree import TreeManager, MenuList, db
+from satree import TreeManager, db, TreeMixin
+
+class MenuList(db.Model, TreeMixin):
+    __tablename__   = "MenuList"
+    name            = db.Column(db.String(80), nullable=False)
+    sex             = db.Column(db.Integer, default=0)
+    age             = db.Column(db.Integer, default=0)
+    address         = db.Column(db.String(120), default='')
+    identify_card   = db.Column(db.String(20), default=0)
+    campus_id       = db.Column(db.String(30), default='')
+    cantact         = db.Column(db.String(20), default='')
 
 app=Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:Aa888888@192.168.74.128:16868/SmartCampus"
