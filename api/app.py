@@ -6,6 +6,7 @@ from common.schema import ma
 from common.security import authenticate, identity
 from resources.item import ItemList, ItemDetail
 from resources.user import UserList, UserDetail
+from resources.admin import AdminData
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -21,6 +22,7 @@ api.add_resource(ItemDetail, '/user/<int:user_id>/item/<int:id>')
 api.add_resource(ItemList, '/user/<int:user_id>/item')
 api.add_resource(UserList, '/user')
 api.add_resource(UserDetail, '/user/<int:id>')
+api.add_resource(AdminData, '/admin')
 
 if __name__ == '__main__':
     app.run(host=app.config['HOST'],
