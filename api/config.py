@@ -1,5 +1,13 @@
 from datetime import timedelta
 
+#jwt config
+JWT_AUTH_URL_RULE      = '/auth'
+JWT_AUTH_USERNAME_KEY  = 'username'
+JWT_AUTH_PASSWORD_KEY  = 'password'
+JWT_LEEWAY             = timedelta(seconds=10)
+JWT_EXPIRATION_DELTA   = timedelta(seconds=300)
+JWT_NOT_BEFORE_DELTA   = timedelta(seconds=0)
+
 # SERVER
 DEBUG = True
 PORT = 5000

@@ -13,3 +13,4 @@ class CRUD():
 
     def delete(self, resource):
         db.session.delete(resource)
+        db.session.commit()

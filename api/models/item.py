@@ -19,10 +19,10 @@ class ItemModel(db.Model, CRUD):
         self.user_id = user_id
 
 class ItemSchema(ma.Schema):
-    class meta:
+    class Meta:
+        fields=('name', 'price')
+
+class ItemOut(ma.Schema):
+    class Meta:
         fields=('name', 'price', 'user')
     user=ma.Nested(UserSchema)
-#class ItemSchema(Schema):
-#    name = fields.String(required=True)
-#    price = fields.Float(required=True)
-#    user = fields.Nested(UserSchema)

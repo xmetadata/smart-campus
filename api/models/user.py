@@ -29,17 +29,16 @@ class UserModel(db.Model, CRUD):
         return check_password_hash(self.hash_password, password)
 
     @classmethod
-    def find_by_username(cls, username):
-        return cls.query.filter_by(username=username).first()
+    def find_by_username(cls, _username):
+        return cls.query.filter(cls.username==_username).first()
 
     @classmethod
     def find_by_id(cls, _id):
-        return cls.query.filter_by(id=_id).first()
+        return cls.query.filter(cls.id==_id).first()
 
 class UserSchema(ma.Schema):
-    class meta:
-        fields=('username', 'password', 'creation_datetime')
-#class UserSchema(Schema):
-#    username = fields.String(required=True)
-#    password = fields.String(required=True, load_only=True)
-#    creation_datetime = fields.DateTime(dump_only=True)
+    class Meta:
+        fields=('username', 'password')
+class UserOut(ma.Schema):
+    class Meta:
+        fields=('id','username')
