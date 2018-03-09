@@ -1,6 +1,8 @@
 #Flask
 config.py
 migrations/
+venv/
+.gitignore
 
 # PyCharm
 .idea/
