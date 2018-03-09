@@ -1,4 +1,3 @@
-from marshmallow import Schema, fields
 from common.database import db, CRUD
 from common.schema import ma
 from models.user import UserSchema

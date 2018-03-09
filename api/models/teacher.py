@@ -1,17 +1,21 @@
 from werkzeug.security import generate_password_hash, check_password_hash
-from marshmallow import Schema, fields
 from common.database import db, CRUD
+from models.backdata import BackData
 from common.schema import ma
 import datetime
 
+teachers2grades = db.Table("teachers2grades",
+                           db.Column('teacher_id', db.Integer, db.ForeignKey("Teacher.id"), primary_key=True),
+                           db.Column('grade_id', db.Integer, db.ForeignKey("BackData.node_id"), primary_key=True))
 
-class UserModel(db.Model, CRUD):
-    __tablename__ = "users"
+class Teacher(db.Model, CRUD):
+    __tablename__ = "Teacher"
 
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80))
-    hash_password = db.Column(db.String(128))
-    creation_datetime = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    id                  = db.Column(db.Integer, primary_key=True)
+    username            = db.Column(db.String(80), nullable=False)
+    hash_password       = db.Column(db.String(128), nullable=False)
+    contact             = db.Column(db.String(20), nullable=False)
+    grades              = db.relationship("BackData", secondary='teachers2grades', backref="Teacher")
 
     def __init__(self, username, password):
         self.username = username
