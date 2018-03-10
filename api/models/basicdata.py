@@ -2,7 +2,7 @@ from common.database import db
 from common.satree import TreeMixin
 from common.schema import ma
 
-class BackData(db.Model, TreeMixin):
+class BasicData(db.Model, TreeMixin):
     __tablename__   = "OrigData"
     name            = db.Column(db.String(80), nullable=False)
     sex             = db.Column(db.Integer, default=0)
@@ -12,6 +12,6 @@ class BackData(db.Model, TreeMixin):
     campus_id       = db.Column(db.String(30), default='')
     cantact         = db.Column(db.String(20), default='')
 
-class BackSchema(ma.Schema):
+class BasicSchema(ma.Schema):
     class Meta:
         fields = ('name','sex','age','cantact','node_id')
