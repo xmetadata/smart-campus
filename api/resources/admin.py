@@ -14,11 +14,11 @@ class AdminData(Resource):
         load_data, errors = BasicSchema().loads(json_data)
         if errors:
             return errors, 400
-        user_data = BasicData(name=load_data['name'],sex=load_data['sex'],age=load_data['age'],cantact=load_data['cantact'])
+        user_data = BasicData(title=load_data['title'],is_student=load_data['is_student'])
         tm = TreeManager(BasicData, db.session)
         try:
-            if load_data['node_id']:
-                tm.add_node(load_data['node_id'], user_data)
+            if load_data['node_uuid']:
+                tm.add_node(load_data['node_uuid'], user_data)
             else:
                 tm.add_node(node=user_data)
         except SQLAlchemyError as e:

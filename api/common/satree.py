@@ -88,7 +88,7 @@ class TreeManager:
             tmp_session.commit()
 
 class TreeMixin:
-    node_id         = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    node_uuid       = db.Column(db.String(36), primary_key=True, default=uuid.uuid1())
     parent_id       = db.Column(db.Integer, default=0)
     left            = db.Column(db.Integer, default=0)
     right           = db.Column(db.Integer, default=0)

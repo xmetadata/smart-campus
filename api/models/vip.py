@@ -1,17 +1,33 @@
+from werkzeug.security import generate_password_hash, check_password_hash
 from common.database import db, CRUD
+from models.basicdata import BasicData
+import uuid
+import datetime
 
-class VipType(db.Model, CRUD):
-    __tablename__ = "VipType"
-    id                  = db.Column(db.Integer, primary_key=True)
-    vip_name            = db.Column(db.String(80), default="")
-    amount              = db.Column(db.Integer, default=0)
-    during              = db.Column(db.Integer, default=0)
-    vip_record          = db.relationship('VipRecord', backref='VipType', lazy='dynamic')
-    patriarch           = db.relationship('Patriarch', backref='VipType', lazy='dynamic')
+vip2student = db.Table('vip2student',
+                    db.Column('vip_uuid', db.String(36), db.ForeignKey('Vip.uuid')),
+                    db.Column('student_uuid', db.String(36), db.ForeignKey(BasicData.node_uuid)))
 
-class VipRecord(db.Model, CRUD):
-    __tablename__ = "VipRecords"
-    id                  = db.Column(db.Integer, primary_key=True)
-    create_time         = db.Column(db.DateTime(), nullable=False)
-    vip_id              = db.Column(db.Integer, db.ForeignKey('VipType.id'))
-    patriarch_id        = db.Column(db.Integer, db.ForeignKey('Patriarch.id'))
+class Vip(db.Model):
+    __tablename__   = "Vip"
+    uuid            = db.Column(db.String(36), primary_key=True, default=uuid.uuid1())
+    phone_number    = db.Column(db.String(11), nullable=False)
+    hash_password   = db.Column(db.String(128), nullable=False)
+    open_id         = db.Column(db.String(30))
+    expire          = db.Column(db.DateTime(), default=datetime.datetime.utcnow)
+    is_wechat       = db.Column(db.Boolean, default=False)
+    is_active       = db.Column(db.Boolean, default=False)
+    c_time          = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    l_time          = db.Column(db.DateTime)
+    students        = db.relationship('BasicData', secondary=vip2student, lazy="dynamic")
+
+    @property
+    def password(self):
+        raise AttributeError('password cannot be read')
+
+    @password.setter
+    def password(self, password):
+        self.hash_password = generate_password_hash(password)
+
+    def confirm_password(self, password):
+        return check_password_hash(self.hash_password, password)
