@@ -3,7 +3,7 @@ from common.satree import TreeMixin
 from common.schema import ma
 
 class BasicData(db.Model, TreeMixin):
-    __tablename__   = "OrigData"
+    __tablename__   = "BasicData"
     name            = db.Column(db.String(80), nullable=False)
     sex             = db.Column(db.Integer, default=0)
     age             = db.Column(db.Integer, default=0)
