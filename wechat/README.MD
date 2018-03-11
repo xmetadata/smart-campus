@@ -1,1 +1,1 @@
-# Wechat Module
+# WeChat API
