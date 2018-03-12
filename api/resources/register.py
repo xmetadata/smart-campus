@@ -7,8 +7,6 @@ import json
 class Register(Resource):
     def post(self):
         req_json = json.dumps(request.get_json())
-        print "@@@@@@@@@@@@@@@@@@@@"
-        print req_json
         try:
             load_data, errors = LoginSchema().loads(req_json)
             if errors:
