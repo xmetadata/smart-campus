@@ -1,8 +1,8 @@
 from datetime import timedelta
 
 #jwt config
-JWT_AUTH_URL_RULE      = '/auth'
-JWT_AUTH_USERNAME_KEY  = 'username'
+JWT_AUTH_URL_RULE      = None
+JWT_AUTH_USERNAME_KEY  = 'phone_number'
 JWT_AUTH_PASSWORD_KEY  = 'password'
 JWT_LEEWAY             = timedelta(seconds=10)
 JWT_EXPIRATION_DELTA   = timedelta(seconds=300)
@@ -21,7 +21,7 @@ JWT_EXPIRATION_DELTA = timedelta(seconds=3600)
 DB_USER = 'root'
 DB_PASS = 'Aa888888'
 DB_NAME = 'SmartCampus'
-DB_ADDR = '192.168.31.89'
+DB_ADDR = '192.168.74.128'
 DB_PORT = 16868
 
 SQLALCHEMY_ECHO = True
