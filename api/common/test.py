@@ -22,14 +22,14 @@ tm=TreeManager(MenuList, db.session)
 test1=MenuList(age=1,name="pc")
 tm.add_node(node=test1)
 test2=MenuList(age=2,name="pc")
-tm.add_node(test1.node_id, test2)
+tm.add_node(test1.node_uuid, test2)
 test3=MenuList(age=3,name="pc")
-tm.add_node(test1.node_id, test3)
-tm.delete_node(test2.node_id)
-node=tm.find_node(test3.node_id)
+tm.add_node(test1.node_uuid, test3)
+tm.delete_node(test2.node_uuid)
+node=tm.find_node(test3.node_uuid)
 if node is None:
     print "None"
 else:
-    print node.node_id
+    print node.node_uuid
 node.age=666666
 tm.update_node(node)

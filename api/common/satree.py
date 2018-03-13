@@ -1,5 +1,6 @@
 from sqlalchemy import func
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import and_
 from common.database import db
 import uuid
 
@@ -14,13 +15,13 @@ class TreeManager:
             return tmp_session.query.filter(tmp_model.parent_id==0).all()
         else:
             return tmp_session.query.filter(tmp_model.root_id==node.root_id,tmp_model.parent_id==0).first()
-    def add_node(self, node_id=-1, node=None):
+    def add_node(self, node_uuid=None, node=None):
         tmp_session = self.__session
         tmp_model   = self.__model
         if node is None:
             return False
         """add node as root"""
-        if node_id == -1:
+        if node_uuid is None:
             node.parent_id = 0
             node.left      = 0
             node.right     = 1
@@ -28,7 +29,7 @@ class TreeManager:
             tmp_session.commit()
             return True
         else:
-            opt_node = tmp_model.query.filter(tmp_model.node_id==node_id).first()
+            opt_node = tmp_model.query.filter(tmp_model.node_uuid==node_uuid).first()
             if opt_node is None:
                 return False
             else:
@@ -42,14 +43,14 @@ class TreeManager:
                 tmp_session.commit()
                 return True
     """delete node and children"""
-    def delete_node(self, node_id=-1):
+    def delete_node(self, node_uuid=None):
         tmp_session = self.__session
         tmp_model   = self.__model
-        if isinstance(node_id, int):
-            if node_id == -1:
+        if isinstance(node_uuid, int):
+            if node_uuid is None:
                 return False
             else:
-                node = tmp_model.query.filter(tmp_model.node_id==node_id).one()
+                node = tmp_model.query.filter(tmp_model.node_uuid==node_uuid).one()
                 if node is None:
                     return False
                 else:
@@ -60,23 +61,27 @@ class TreeManager:
                     return True
         else:
             return False
-    def delete_nodes(self, node_ids=None):
-        if not isinstance(node_ids, list):
+    def delete_nodes(self, node_uuids=None):
+        if not isinstance(node_uuids, list):
             return False
         else:
-            for id in node_ids:
+            for id in node_uuids:
                 self.delete_node(id)
             return True
     """find one node or many nodes"""
-    def find_node(self, node_id=-1, many=False):
+    def find_node(self, node_uuid=None, many=False, parents=False):
         tmp_session = self.__session
         tmp_model   = self.__model
-        if node_id == -1:
+        if node_uuid is None:
             return None
         else:
-            node = tmp_model.query.filter(tmp_model.node_id==node_id).first()
+            node = tmp_model.query.filter(tmp_model.node_uuid==node_uuid).first()
             if many:
-                return tmp_model.query.filter(tmp_model.left>=node.left,tmp_model.right<=node.right).all()
+                level = tmp_model.query.filter(tmp_model.left<=node.left, tmp_model.right>=node.right).count()
+                if parents:
+                    return tmp_model.query.filter(and_(tmp_model.left<=node.left, tmp_model.right>=node.right).count()==level-1).first()
+                else:
+                    return tmp_model.query.filter(and_(tmp_model.left<=node.left, tmp_model.right>=node.right).count()==level+1).all()
             else:
                 return node
     """update node"""
