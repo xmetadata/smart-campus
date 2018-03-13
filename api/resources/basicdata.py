@@ -1,10 +1,8 @@
-from flask_restful import Resource, request
-from flask_jwt import jwt_required, current_identity
-from sqlalchemy.exc import SQLAlchemyError
+from flask_restful import Resource
+from flask_jwt import jwt_required
 from common.satree import TreeManager
 from common.database import db
 from models.basicdata import BasicData
-import json
 
 class BasicData(Resource):
     @jwt_required()

@@ -1,20 +1,14 @@
 from sqlalchemy import func
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import and_
-from common.database import db
+#from common.database import db
+from database import db
 import uuid
 
 class TreeManager:
     def __init__(self, model_obj=None, session=None):
         self.__model   = model_obj
         self.__session = session
-    def get_root_node(self, node=None):
-        tmp_model   = self.__model;
-        tmp_session = self.__session;
-        if node is None:
-            return tmp_session.query.filter(tmp_model.parent_id==0).all()
-        else:
-            return tmp_session.query.filter(tmp_model.root_id==node.root_id,tmp_model.parent_id==0).first()
     def add_node(self, node_uuid=None, node=None):
         tmp_session = self.__session
         tmp_model   = self.__model
@@ -22,7 +16,7 @@ class TreeManager:
             return False
         """add node as root"""
         if node_uuid is None:
-            node.parent_id = 0
+            node.parent_uuid = uuid.uuid1()
             node.left      = 0
             node.right     = 1
             tmp_session.add(node)
@@ -34,9 +28,9 @@ class TreeManager:
                 return False
             else:
                 """add node as the last node of the same level"""
-                node.parent_id = opt_node.node_id
-                node.left      = opt_node.right
-                node.right     = opt_node.right + 1
+                node.parent_uuid = opt_node.node_uuid
+                node.left        = opt_node.right
+                node.right       = opt_node.right + 1
                 tmp_model.query.filter(tmp_model.left>opt_node.right).update({tmp_model.left:tmp_model.left+2})
                 tmp_model.query.filter(tmp_model.right>=opt_node.right).update({tmp_model.right:tmp_model.right+2})
                 tmp_session.add(node)
@@ -94,6 +88,6 @@ class TreeManager:
 
 class TreeMixin:
     node_uuid       = db.Column(db.String(36), primary_key=True, default=uuid.uuid1())
-    parent_id       = db.Column(db.Integer, default=0)
+    parent_uuid     = db.Column(db.String(36))
     left            = db.Column(db.Integer, default=0)
     right           = db.Column(db.Integer, default=0)
