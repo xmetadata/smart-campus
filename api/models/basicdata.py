@@ -16,4 +16,9 @@ class BasicSchema(ma.Schema):
 
 class ListSchema(ma.Schema):
     class Meta:
-        fields = ('','')
+        fields = ('title','node_uuid')
+
+class BasicEdit(ma.Schema):
+    class Meta:
+        fields = ('action', 'node')
+    node = ma.Nested(ListSchema)
