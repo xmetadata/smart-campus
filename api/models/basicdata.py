@@ -13,3 +13,7 @@ class BasicData(db.Model, TreeMixin):
 class BasicSchema(ma.Schema):
     class Meta:
         fields = ('title','is_student')
+
+class ListSchema(ma.Schema):
+    class Meta:
+        fields = ('','')

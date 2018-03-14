@@ -26,11 +26,13 @@ test2=MenuList(age=2,name="pc")
 tm.add_node(test1.node_uuid, test2)
 test3=MenuList(age=3,name="pc")
 tm.add_node(test1.node_uuid, test3)
-tm.delete_node(test2.node_uuid)
-node=tm.find_node(test3.node_uuid)
-if node is None:
-    print "None"
-else:
-    print node.node_uuid
-node.age=666666
-tm.update_node(node)
+test4=MenuList(age=4, name="pc")
+tm.add_node(test2.node_uuid, test4)
+#tm.delete_node(test2.node_uuid)
+#node=tm.find_node(test3.node_uuid)
+#if node is None:
+#    print "None"
+#else:
+#    print node.node_uuid
+#node.age=666666
+#tm.update_node(node)

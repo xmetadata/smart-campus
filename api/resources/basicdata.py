@@ -3,13 +3,23 @@ from flask_jwt import jwt_required
 from common.satree import TreeManager
 from common.database import db
 from models.basicdata import BasicData
+import datetime
 
-class BasicData(Resource):
+class BasicList(Resource):
     @jwt_required()
     def get(self, node_uuid):
         tm=TreeManager(BasicData, db.session)
-        nodes = tm.find_node(node_uuid=node_uuid, many=True)
-        if nodes is None:
-            return {"errmsg" : "invalid node_uuid!"}, 400
+        if node_uuid == "root":
+            root = BasicData(title="smart school", is_student=False, c_time=datetime.datetime.utcnow())
+            tm.add_node(node=root)
+            return {"node_uuid" : root.node_uuid}, 200
         else:
-            return nodes
+            pass
+
+class BasicEdit():
+    @jwt_required()
+    def post(self, node_uuid):
+        pass
+    @jwt_required
+    def delete(self, node_uuid):
+        pass
