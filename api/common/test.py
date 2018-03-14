@@ -1,7 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from flask_restful import Api
-from satree import TreeManager, db, TreeMixin
+from common.database import db
+from common.satree import TreeManager, TreeMixin
 
 class MenuList(db.Model, TreeMixin):
     __tablename__   = "MenuList"
@@ -14,7 +15,7 @@ class MenuList(db.Model, TreeMixin):
     cantact         = db.Column(db.String(20), default='')
 
 app=Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:Aa888888@192.168.11.101:16868/SmartCampus"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:Aa888888@192.168.74.128:16868/SmartCampus"
 db.init_app(app)
 app.app_context().push()
 db.create_all()

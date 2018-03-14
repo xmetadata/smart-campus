@@ -22,12 +22,6 @@ class Admin(db.Model, CRUD):
     l_time          = db.Column(db.DateTime)
     students        = db.relationship('BasicData', secondary=vip2student, lazy="dynamic")
 
-#    def __init__(self, phone_number=None, password=None, open_id=None, role=None):
-#        self.phone_number   = phone_number
-#        self.password       = password
-#        self.open_id        = open_id
-#        self.role           = role
-
     @property
     def password(self):
         raise AttributeError('password cannot be read')

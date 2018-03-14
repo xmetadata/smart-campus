@@ -1,8 +1,7 @@
 from sqlalchemy import func
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import and_
-#from common.database import db
-from database import db
+from common.database import db
 import uuid
 
 class TreeManager:
@@ -16,9 +15,10 @@ class TreeManager:
             return False
         """add node as root"""
         if node_uuid is None:
-            node.parent_uuid = uuid.uuid1()
-            node.left      = 0
-            node.right     = 1
+            node.node_uuid   = uuid.uuid1()
+            node.parent_uuid = ""
+            node.left        = 0
+            node.right       = 1
             tmp_session.add(node)
             tmp_session.commit()
             return True
@@ -28,6 +28,7 @@ class TreeManager:
                 return False
             else:
                 """add node as the last node of the same level"""
+                node.node_uuid   = uuid.uuid1()
                 node.parent_uuid = opt_node.node_uuid
                 node.left        = opt_node.right
                 node.right       = opt_node.right + 1
@@ -87,7 +88,7 @@ class TreeManager:
             tmp_session.commit()
 
 class TreeMixin:
-    node_uuid       = db.Column(db.String(36), primary_key=True, default=uuid.uuid1())
+    node_uuid       = db.Column(db.String(36), primary_key=True)
     parent_uuid     = db.Column(db.String(36))
     left            = db.Column(db.Integer, default=0)
     right           = db.Column(db.Integer, default=0)
