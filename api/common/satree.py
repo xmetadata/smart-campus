@@ -77,9 +77,11 @@ class TreeManager:
             if many:
                 level = tmp_model.query.filter(tmp_model.left<=node.left, tmp_model.right>=node.right).count()
                 if parents:
-                    return tmp_model.query.filter(and_(tmp_model.left<=node.left, tmp_model.right>=node.right).count()==level-1).first()
+                    par_node = tmp_model.query.filter(tmp_model.query.filter(tmp_model.left<=node.left, tmp_model.right>=node.right).count()==level-1).first()
+                    return par_node
                 else:
-                    return tmp_model.query.filter(and_(tmp_model.left<=node.left, tmp_model.right>=node.right).count()==level+1).all()
+                    kid_node = tmp_model.query.filter(tmp_model.query.filter(tmp_model.left<=node.left, tmp_model.right>=node.right).count()==level+1).first()
+                    return kid_node
             else:
                 return node
     """update node"""
