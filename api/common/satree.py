@@ -75,13 +75,10 @@ class TreeManager:
         else:
             node = tmp_model.query.filter(tmp_model.node_uuid==node_uuid).first()
             if many:
-                level = tmp_model.query.filter(tmp_model.left<=node.left, tmp_model.right>=node.right).count()
                 if parents:
-                    par_node = tmp_model.query.filter(tmp_model.query.filter(tmp_model.left<=node.left, tmp_model.right>=node.right).count()==level - 1).all()
-                    return par_node
+                    return tmp_model.query.filter(tmp_model.node_uuid==node.parent_uuid).all()
                 else:
-                    kid_node = tmp_model.query.filter(tmp_model.query.filter(tmp_model.left<=node.left, tmp_model.right>=node.right).count()==level + 1).all()
-                    return kid_node
+                    return tmp_model.query.filter(tmp_model.parent_uuid==node.node_uuid).all()
             else:
                 return node
     """update node"""
