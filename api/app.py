@@ -8,7 +8,7 @@ from resources.item import ItemList, ItemDetail
 from resources.user import UserList, UserDetail
 from resources.register import Register
 from resources.admin import AdminData
-from resources.basicdata import BasicList
+from resources.basicdata import BasicList, BasicEdit
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -30,6 +30,7 @@ api.add_resource(UserDetail, '/user/<int:id>')
 api.add_resource(AdminData, '/admin')
 api.add_resource(Register, '/register')
 api.add_resource(BasicList, '/BasicList/<string:node_uuid>')
+api.add_resource(BasicEdit, '/BasicEdit/<string:node_uuid>')
 
 if __name__ == '__main__':
     app.run(host=app.config['HOST'],
