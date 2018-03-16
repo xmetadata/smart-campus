@@ -4,6 +4,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from common.satree import TreeManager
 from common.database import db
 from models.basicdata import BasicData, ListSchema, BasicEditSchema
+from models.admin import Admin
 import datetime
 import json
 
@@ -36,11 +37,30 @@ class BasicEdit(Resource):
         if basic_node is None:
             return {"msg" : "invalid node_uuid"}, 400
         if load_data['action'] == 'add':
-            node = BasicData(title=load_data['node']['title'], is_student=load_data['node']['is_student'])
-            try:
-                tm.add_node(node_uuid=basic_node.node_uuid, node=node)
-            except SQLAlchemyError as e:
-                return {'msg': e.message}, 400
+            if load_data['node']['is_student']:
+                student_node = BasicData(title=load_data['node']['title'], is_student=load_data['node']['is_student'])
+                ret = tm.add_node(node_uuid=basic_node.node_uuid, node=student_node)
+                if ret is False:
+                    return {"msg" : "add failed"}, 400
+                patriarch_list = load_data['node']['patriarch']
+                patriarch_error = []
+                for patriarch_itr in patriarch_list:
+                    tmp_admin = Admin(phone_number=patriarch_itr, password=patriarch_itr[-4:])
+                    tmp_admin.students = [student_node,]
+                    try:
+                        tmp_admin.add(tmp_admin)
+                    except SQLAlchemyError as e:
+                        patriarch_error.append(patriarch_itr)
+                if patriarch_error is False:
+                    return {"msg" : "add failed", "patriarch" : json.dumps(patriarch_error)},200
+                else:
+                    return {"msg" : "add success", "patriarch" : []}, 400
+            else:
+                node = BasicData(title=load_data['node']['title'], is_student=load_data['node']['is_student'])
+                try:
+                    tm.add_node(node_uuid=basic_node.node_uuid, node=node)
+                except SQLAlchemyError as e:
+                    return {'msg': e.message}, 400
             return {"msg" : "add success"}, 200
         elif load_data['action'] ==  'update':
             basic_node.title = load_data['node']['title']

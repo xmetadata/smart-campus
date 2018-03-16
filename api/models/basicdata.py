@@ -14,8 +14,7 @@ class BasicData(db.Model, TreeMixin):
 ##basic schema
 class BasicSchema(ma.Schema):
     class Meta:
-        fields = ('title','is_student')
-
+        fields = ('title','is_student', 'patriarch')
 ##OUT->list node
 class ListSchema(ma.Schema):
     class Meta:

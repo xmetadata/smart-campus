@@ -24,4 +24,3 @@ class AdminData(Resource):
         except SQLAlchemyError as e:
             return e.message, 500
         return user_data.node_id
-
