@@ -23,8 +23,8 @@ app.add_url_rule(auth_url_rule, **auth_url_options)
 
 api.add_resource(AdminData, '/admin')
 api.add_resource(Register, '/register')
-api.add_resource(BasicList, '/BasicList/<string:node_uuid>')
-api.add_resource(BasicEdit, '/BasicEdit/<string:node_uuid>')
+api.add_resource(BasicList, '/node/<string:node_uuid>')
+api.add_resource(BasicEdit, '/node/<string:node_uuid>')
 
 if __name__ == '__main__':
     app.run(host=app.config['HOST'],

@@ -18,7 +18,7 @@ class BasicList(Resource):
             if root is None:
                 root = BasicData(title="smart school", is_student=False, c_time=datetime.datetime.utcnow())
                 tm.add_node(node=root)
-                return {"title" : root.title, "node_uuid" : root.node_uuid}, 200
+                return {"title" : root.title, "node_uuid" : root.node_uuid, "children" : []}, 200
             basic_node = root
         else:
             basic_node = tm.find_node(node_uuid=node_uuid)
