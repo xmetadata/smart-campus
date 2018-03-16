@@ -10,14 +10,18 @@ class BasicData(db.Model, TreeMixin):
     level           = db.Column(db.Integer)
     c_time          = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
+#edit
+##basic schema
 class BasicSchema(ma.Schema):
     class Meta:
         fields = ('title','is_student')
 
+##OUT->list node
 class ListSchema(ma.Schema):
     class Meta:
         fields = ('title','node_uuid')
 
+##IN->edit node
 class BasicEditSchema(ma.Schema):
     class Meta:
         fields = ('action', 'node')

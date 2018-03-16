@@ -44,21 +44,18 @@ class TreeManager:
     def delete_node(self, node_uuid=None):
         tmp_session = self.__session
         tmp_model   = self.__model
-        if isinstance(node_uuid, int):
-            if node_uuid is None:
+        if node_uuid is None:
+            return False
+        else:
+            node = tmp_model.query.filter(tmp_model.node_uuid==node_uuid).one()
+            if node is None:
                 return False
             else:
-                node = tmp_model.query.filter(tmp_model.node_uuid==node_uuid).one()
-                if node is None:
-                    return False
-                else:
-                    tmp_model.query.filter(tmp_model.left>=node.left,tmp_model.right<=node.right).delete()
-                    tmp_model.query.filter(tmp_model.left>node.right).update({tmp_model.left:tmp_model.left-(node.right-node.left)-1})
-                    tmp_model.query.filter(tmp_model.right>node.right).update({tmp_model.right:tmp_model.right-(node.right-node.left)-1})
-                    tmp_session.commit()
-                    return True
-        else:
-            return False
+                tmp_model.query.filter(tmp_model.left>=node.left,tmp_model.right<=node.right).delete()
+                tmp_model.query.filter(tmp_model.left>node.right).update({tmp_model.left:tmp_model.left-(node.right-node.left)-1})
+                tmp_model.query.filter(tmp_model.right>node.right).update({tmp_model.right:tmp_model.right-(node.right-node.left)-1})
+                tmp_session.commit()
+                return True
     def delete_nodes(self, node_uuids=None):
         if not isinstance(node_uuids, list):
             return False

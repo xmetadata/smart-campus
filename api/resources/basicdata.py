@@ -41,22 +41,40 @@ class BasicEdit(Resource):
                 tm.add_node(node_uuid=basic_node.node_uuid, node=node)
             except SQLAlchemyError as e:
                 return {'msg': e.message}, 400
-            return {'msg' : 'add success'}, 200
+            return {"msg" : "add success"}, 200
         elif load_data['action'] ==  'update':
             basic_node.title = load_data['node']['title']
             tm.update_node(basic_node)
-            return {'msg' : 'update success'}, 200
+            return {"msg" : "update success"}, 200
         else:
-            return {'msg' : 'invalid action'}, 400
+            return {"msg" : "invalid action"}, 400
 
-    @jwt_required
+    @jwt_required()
     def delete(self, node_uuid):
         tm = TreeManager(BasicData, db.session)
-        try:
-            basic_node = tm.find_node(node_uuid=node_uuid)
-        except SQLAlchemyError as e:
-            return {'msg' : e.message}, 400
-        if basic_node is None:
-            return {'msg' : 'invalid node_uuid'}, 400
-        tm.delete_node(node_uuid)
-        return {'msg' : 'delete success'}, 200
+        if node_uuid == 'delete':
+            """delete multiple nodes"""
+            req_data   = json.dumps(request.get_json())
+            load_data  = json.loads(req_data)
+            error_node = []
+            for node_ite in load_data:
+                try:
+                    ret = tm.delete_node(node_ite)
+                    if ret is False:
+                        error_node.append(node_ite)
+                except SQLAlchemyError as e:
+                    error_node.append(node_ite)
+            if error_node is False:
+                return {"msg" : "delete failed", "nodes" : json.dumps(error_node)}, 400
+            else:
+                return {"msg" : "delete success", "nodes" : []}, 200
+        else:
+            """delete one node"""
+            try:
+                basic_node = tm.find_node(node_uuid=node_uuid)
+            except SQLAlchemyError as e:
+                return {"msg" : e.message}, 400
+            if basic_node is None:
+                return {"msg" : "invalid node_uuid"}, 400
+            ret = tm.delete_node(node_uuid)
+            return {"msg" : "delete success" if ret else "delete failed"}, 200
