@@ -5,7 +5,7 @@ import json
 
 from common.satree import TreeManager
 from common.database import db
-from models.basicdata import BasicData, BasicSchema
+from models.nodetree import NodeTree, BasicSchema
 
 class AdminData(Resource):
     @jwt_required()
@@ -14,8 +14,8 @@ class AdminData(Resource):
         load_data, errors = BasicSchema().loads(json_data)
         if errors:
             return errors, 400
-        user_data = BasicData(title=load_data['title'],is_student=load_data['is_student'])
-        tm = TreeManager(BasicData, db.session)
+        user_data = NodeTree(title=load_data['title'],is_student=load_data['is_student'])
+        tm = TreeManager(NodeTree, db.session)
         try:
             if load_data['node_uuid']:
                 tm.add_node(load_data['node_uuid'], user_data)

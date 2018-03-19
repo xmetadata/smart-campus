@@ -3,8 +3,8 @@ from common.satree import TreeMixin
 from common.schema import ma
 import datetime
 
-class BasicData(db.Model, TreeMixin):
-    __tablename__   = "BasicData"
+class NodeTree(db.Model, TreeMixin):
+    __tablename__   = "NodeTree"
     title           = db.Column(db.String(50), default="")
     is_student      = db.Column(db.Boolean, default=False)
     level           = db.Column(db.Integer)

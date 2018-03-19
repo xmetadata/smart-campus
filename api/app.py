@@ -6,7 +6,7 @@ from common.schema import ma
 from common.security import authenticate, identity, payload_handle, auth_url_rule, auth_url_options
 from resources.register import Register
 from resources.admin import AdminData
-from resources.basicdata import BasicList, BasicEdit
+from resources.nodetree import BasicList, BasicEdit
 
 app = Flask(__name__)
 app.config.from_object('config')

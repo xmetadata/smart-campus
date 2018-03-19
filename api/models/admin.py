@@ -1,13 +1,13 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from common.database import db, CRUD
 from common.schema import ma
-from models.basicdata import BasicData
+from models.nodetree import NodeTree
 import uuid
 import datetime
 
-vip2student = db.Table('vip2student',
+admin_m2m_node = db.Table('admin_m2m_node',
                     db.Column('vip_uuid', db.String(36), db.ForeignKey('Admin.uuid')),
-                    db.Column('student_uuid', db.String(36), db.ForeignKey(BasicData.node_uuid)))
+                    db.Column('node_uuid', db.String(36), db.ForeignKey(NodeTree.node_uuid)))
 
 class Admin(db.Model, CRUD):
     __tablename__   = "Admin"
@@ -20,7 +20,7 @@ class Admin(db.Model, CRUD):
     is_active       = db.Column(db.Boolean, default=False)
     c_time          = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     l_time          = db.Column(db.DateTime)
-    students        = db.relationship('BasicData', secondary=vip2student, lazy="dynamic")
+    students        = db.relationship('NodeTree', secondary=admin_m2m_node, lazy="dynamic")
 
     @property
     def password(self):

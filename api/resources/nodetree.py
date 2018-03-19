@@ -3,7 +3,7 @@ from flask_jwt import jwt_required
 from sqlalchemy.exc import SQLAlchemyError
 from common.satree import TreeManager
 from common.database import db
-from models.basicdata import BasicData, ListSchema, BasicEditSchema
+from models.nodetree import NodeTree, ListSchema, BasicEditSchema
 from models.admin import Admin
 import datetime
 import json
@@ -11,12 +11,12 @@ import json
 class BasicList(Resource):
     @jwt_required()
     def get(self, node_uuid):
-        tm=TreeManager(BasicData, db.session)
+        tm=TreeManager(NodeTree, db.session)
         basic_node = None
         if node_uuid == "root":
             root = tm.get_root_node()
             if root is None:
-                root = BasicData(title="smart school", is_student=False, c_time=datetime.datetime.utcnow())
+                root = NodeTree(title="smart school", is_student=False, c_time=datetime.datetime.utcnow())
                 tm.add_node(node=root)
                 return {"title" : root.title, "node_uuid" : root.node_uuid, "children" : []}, 200
             basic_node = root
@@ -28,7 +28,7 @@ class BasicList(Resource):
 class BasicEdit(Resource):
     @jwt_required()
     def post(self, node_uuid):
-        tm = TreeManager(BasicData, db.session)
+        tm = TreeManager(NodeTree, db.session)
         req_data = json.dumps(request.get_json())
         load_data, errors = BasicEditSchema().loads(req_data)
         if errors:
@@ -38,7 +38,7 @@ class BasicEdit(Resource):
             return {"msg" : "invalid node_uuid"}, 400
         if load_data['action'] == 'add':
             if load_data['node']['is_student']:
-                student_node = BasicData(title=load_data['node']['title'], is_student=load_data['node']['is_student'])
+                student_node = NodeTree(title=load_data['node']['title'], is_student=load_data['node']['is_student'])
                 ret = tm.add_node(node_uuid=basic_node.node_uuid, node=student_node)
                 if ret is False:
                     return {"msg" : "add failed"}, 400
@@ -56,7 +56,7 @@ class BasicEdit(Resource):
                 else:
                     return {"msg" : "add success", "patriarch" : []}, 400
             else:
-                node = BasicData(title=load_data['node']['title'], is_student=load_data['node']['is_student'])
+                node = NodeTree(title=load_data['node']['title'], is_student=load_data['node']['is_student'])
                 try:
                     tm.add_node(node_uuid=basic_node.node_uuid, node=node)
                 except SQLAlchemyError as e:
@@ -71,7 +71,7 @@ class BasicEdit(Resource):
 
     @jwt_required()
     def delete(self, node_uuid):
-        tm = TreeManager(BasicData, db.session)
+        tm = TreeManager(NodeTree, db.session)
         if node_uuid == 'delete':
             """delete multiple nodes"""
             req_data   = json.dumps(request.get_json())
