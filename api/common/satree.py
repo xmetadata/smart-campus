@@ -122,7 +122,7 @@ class TreeManager:
                 tmp_session.commit()
             except SQLAlchemyError as e:
                 return False, e._message
-            return True, ""
+            return True
 
 class TreeMixin:
     node_uuid       = db.Column(db.String(36), primary_key=True)

@@ -32,25 +32,27 @@ class TreeRoot(Resource):
             if errors:
                 return ret_msg(status=False, msg="parse request data failed.")
             root = NodeTree(title=load_data['title'], is_student=load_data['is_student'])
-            try:
-                tm.add_node(node=root)
-            except SQLAlchemyError as e:
-                return ret_msg(status=False, msg=e.message)
-            return ret_msg(status=False, msg="add root node success.")
+            status, error = tm.add_node(node=root)
+            if status:
+                return ret_msg(status=True, msg="add root node success.")
+            else:
+                return ret_msg(status=False, msg=error)
 
 class TreeList(Resource):
     @jwt_required()
     def get(self, node_uuid):
         tm = TreeManager(NodeTree, db.session)
         if tm is None:
-            return ret_msg(status=False, msg="get manager handle failed."), 400
-        basic_node = tm.find_node(node_uuid=node_uuid)
-        if basic_node is None:
-            return ret_msg(status=False, msg="invalid node uuid"), 404
-        nodes = tm.find_node(node_uuid=basic_node.node_uuid, many=True)
-        ret_data = {"title" : basic_node.title, "node_uuid" : basic_node.node_uuid, "children" : ""}
+            return ret_msg(status=False, msg="get manager handle failed.")
+        status, data = tm.find_node(node_uuid=node_uuid)
+        if status is False:
+            return ret_msg(status=False, msg=data)
+        status, nodes = tm.find_node(node_uuid=data.node_uuid, many=True)
+        if status is False:
+            return ret_msg(status=False, msg=nodes)
+        ret_data = {"title" : data.title, "node_uuid" : data.node_uuid, "children" : ""}
         ret_data.children = NodeSchema(many=True, exclude=('patriarch')).dump(nodes).data
-        return ret_msg(status=True, msg="find success", data=ret_data), 200
+        return ret_msg(status=True, msg="find success", data=ret_data)
 
 class TreeEdit(Resource):
     @jwt_required()
@@ -58,29 +60,28 @@ class TreeEdit(Resource):
         tm = TreeManager(NodeTree, db.session)
         if tm is None:
             return ret_msg(status=False, msg="get manager handle failed.")
-        node = tm.find_node(node_uuid=node_uuid)
-        if node is None:
-            return ret_msg(status=False, msg="invalid node uuid.")
+        status, node = tm.find_node(node_uuid=node_uuid)
+        if status is False:
+            return ret_msg(status=False, msg=node)
         return ret_msg(status=True, msg="find node success", data=NodeSchema(exclude=('patriarch')).dump(node).data)
     @jwt_required()
     def post(self, node_uuid):
         tm = TreeManager(NodeTree, db.session)
         if tm is None:
             return ret_msg(status=False, msg="get manager handle failed.")
-        basic_node = tm.find_node(node_uuid=node_uuid)
-        if basic_node is None:
-            return ret_msg(status=False, msg="invalid node uuid.")
+        status, basic_node = tm.find_node(node_uuid=node_uuid)
+        if status is False:
+            return ret_msg(status=False, msg=basic_node)
         req_json = json.dumps(request.get_json())
         load_data, errors = NodeSchema().loads(req_json)
         if errors:
             return ret_msg(status=False, msg="parse request data failed.")
         if load_data['is_student']:
             new_node = NodeTree(title=load_data['title'], is_student=load_data['is_student'])
-            try:
-                ret = tm.add_node(new_node)
+            status, error = tm.add_node(new_node)
+            if status is False:
+                return ret_msg(status=False, msg=error)
 
-
-        new_node = NodeTree(title=load_data['title'], is_student=load_data['is_student'])
     @jwt_required()
     def put(self, node_uuid):
         tm = TreeManager(NodeTree, db.session)
@@ -91,11 +92,6 @@ class TreeEdit(Resource):
         tm = TreeManager(NodeTree, db.session)
         if tm is None:
             return ret_msg(status=False, msg="get manager handle failed."), 400
-
-class NodeDetail(Resource):
-    @jwt_required()
-    def get(self, node_uuid):
-        tm = TreeManager(NodeTree, db.session)
 
 class BasicList(Resource):
     @jwt_required()
