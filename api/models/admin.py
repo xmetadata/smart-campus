@@ -1,6 +1,8 @@
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.exc import SQLAlchemyError
 from common.database import db, CRUD
 from common.schema import ma
+from common.retmsg import ret_msg
 from models.nodetree import NodeTree
 import uuid
 import datetime
@@ -41,6 +43,14 @@ class Admin(db.Model, CRUD):
     def find_by_uuid(cls, uuid):
         return cls.query.filter(cls.uuid==uuid).first()
 
+    @classmethod
+    def find_node_by_uuid(cls, uuid):
+        nodes = None
+        try:
+            nodes = cls.query.filter(cls.students.node_uuid==uuid).add()
+        except SQLAlchemyError as e:
+            return False, e.message
+        return True, nodes
 class LoginSchema(ma.Schema):
     class Meta:
         fields = ('phone_number','password','user_type')

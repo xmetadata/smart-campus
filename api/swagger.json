@@ -1,0 +1,672 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a sample server.",
+    "version": "1.0.0",
+    "title": "Swagger Petstore"
+  },
+  "host": "sc-api.xmetadata.com",
+  "basePath": "/v1",
+  "tags": [
+    {
+      "name": "node",
+      "description": "Node is basic data for this project"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/node": {
+      "get": {
+        "tags": [
+          "node"
+        ],
+        "summary": "Find all nodes",
+        "description": "",
+        "operationId": "getNodeList",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Node"
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          }
+        },
+        "deprecated": true
+      },
+      "post": {
+        "tags": [
+          "node"
+        ],
+        "summary": "Create node",
+        "description": "",
+        "operationId": "createNode",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "Node uuid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "node object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Node"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Node"
+              }
+            }
+          },
+          "400": {
+            "description": "bad request"
+          },
+          "404": {
+            "description": "not found"
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/node/{uuid}": {
+      "get": {
+        "tags": [
+          "node"
+        ],
+        "summary": "Find node by id",
+        "description": "",
+        "operationId": "getNode",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "Node uuid",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Node"
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+,
+      "post": {
+        "tags": [
+          "node"
+        ],
+        "summary": "Create node by parent id",
+        "description": "",
+        "operationId": "createNodeByParent",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "Node uuid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Node"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Node"
+              }
+            }
+          },
+          "400": {
+            "description": "bad request"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "node"
+        ],
+        "summary": "Update node by id",
+        "description": "",
+        "operationId": "updateNode",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "Node uuid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "node object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Node"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Node"
+              }
+            }
+          },
+          "400": {
+            "description": "bad request"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "node"
+        ],
+        "summary": "Delete node by id",
+        "description": "",
+        "operationId": "deleteNode",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "Node uuid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Node"
+            }
+          }
+        ],
+        "responses": {
+          "203": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "bad request"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/noderoot": {
+      "get": {
+        "tags": [
+          "node"
+        ],
+        "summary": "Find root node",
+        "description": "",
+        "operationId": "getNodeRoot",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Node"
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "node"
+        ],
+        "summary": "Create root node",
+        "description": "",
+        "operationId": "createRootNode",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "node uuid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "node object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Node"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Node"
+              }
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/nodetree/{uuid}": {
+      "get": {
+        "tags": [
+          "node"
+        ],
+        "summary": "Find child nodes by parent id",
+        "description": "",
+        "operationId": "getNodeTree",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "node uuid",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Node"
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/node/{node_uuid}/member": {
+      "get": {
+        "tags": [
+          "member"
+        ],
+        "summary": "Find all members",
+        "description": "",
+        "operationId": "getMemberList",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "node_uuid",
+            "in": "path",
+            "description": "node uuid",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Member"
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "member"
+        ],
+        "summary": "Create member",
+        "description": "",
+        "operationId": "createMember",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "node_uuid",
+            "in": "path",
+            "description": "node uuid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "member object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Member"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Member"
+              }
+            }
+          },
+          "400": {
+            "description": "bad request"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/node/{node_uuid}/member/{uuid}": {
+      "get": {
+        "tags": [
+          "member"
+        ],
+        "summary": "Find member by id",
+        "description": "",
+        "operationId": "getMember",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "node_uuid",
+            "in": "path",
+            "description": "node uuid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "member uuid",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Member"
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "member"
+        ],
+        "summary": "Update member by id",
+        "description": "",
+        "operationId": "updateMember",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "node_uuid",
+            "in": "path",
+            "description": "node uuid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "member uuid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "member object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Member"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Member"
+              }
+            }
+          },
+          "400": {
+            "description": "bad request"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "member"
+        ],
+        "summary": "Delete member by id",
+        "description": "",
+        "operationId": "deleteMember",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "node_uuid",
+            "in": "path",
+            "description": "node uuid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "member uuid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Member"
+            }
+          }
+        ],
+        "responses": {
+          "203": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "bad request"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/current_member": {
+      "get": {
+        "tags": [
+          "member"
+        ],
+        "summary": "Get current authentication memeber",
+        "description": "",
+        "operationId": "getMemberSelf",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Member"
+              }
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Node": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "title": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "is_student": {
+          "type": "boolean",
+          "default": false
+        },
+        "parent_id": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "Member": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "real_name": {
+          "type": "string"
+        },
+        "phone_number": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "open_id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

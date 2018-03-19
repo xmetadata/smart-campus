@@ -16,18 +16,8 @@ class NodeSchema(ma.Schema):
     class Meta:
         fields = ('title','is_student', 'patriarch')
 
-class TreeListSchema(ma.Schema):
-    class Meta:
-        fields = ('title', 'node_uuid', 'children')
-    children = ma.Nested(NodeSchema)
-
 ##OUT->list node
 class ListSchema(ma.Schema):
     class Meta:
         fields = ('title','node_uuid')
 
-##IN->edit node
-class BasicEditSchema(ma.Schema):
-    class Meta:
-        fields = ('action', 'node')
-    node = ma.Nested(NodeSchema)

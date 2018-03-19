@@ -5,13 +5,13 @@ import json
 
 from common.satree import TreeManager
 from common.database import db
-from models.nodetree import NodeTree, BasicSchema
+from models.nodetree import NodeTree, NodeSchema
 
 class AdminData(Resource):
     @jwt_required()
     def post(self):
         json_data = json.dumps(request.get_json())
-        load_data, errors = BasicSchema().loads(json_data)
+        load_data, errors = NodeSchema().loads(json_data)
         if errors:
             return errors, 400
         user_data = NodeTree(title=load_data['title'],is_student=load_data['is_student'])
