@@ -1,4 +1,5 @@
 from sqlalchemy import func
+from sqlalchemy.exc import SQLAlchemyError
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import and_
 from common.database import db
@@ -9,8 +10,13 @@ class TreeManager:
         self.__model   = model_obj
         self.__session = session
     def get_root_node(self):
-        tmp_model = self.__model;
-        return tmp_model.query.filter(tmp_model.parent_uuid=="").first()
+        tmp_model = self.__model
+        root = None
+        try:
+            root = tmp_model.query.filter(tmp_model.parent_uuid=="").first()
+        except SQLAlchemyError as e:
+            return None
+        return root
     def add_node(self, node_uuid=None, node=None):
         tmp_session = self.__session
         tmp_model   = self.__model
@@ -22,24 +28,33 @@ class TreeManager:
             node.parent_uuid = ""
             node.left        = 0
             node.right       = 1
-            tmp_session.add(node)
-            tmp_session.commit()
-            return True
+            try:
+                tmp_session.add(node)
+                tmp_session.commit()
+            except SQLAlchemyError as e:
+                return False, e.message
+            return True, ""
         else:
-            opt_node = tmp_model.query.filter(tmp_model.node_uuid==node_uuid).first()
+            try:
+                opt_node = tmp_model.query.filter(tmp_model.node_uuid==node_uuid).first()
+            except SQLAlchemyError as e:
+                return False, e.message
             if opt_node is None:
-                return False
+                return False, "invalid node_uuid."
             else:
                 """add node as the last node of the same level"""
                 node.node_uuid   = uuid.uuid1()
                 node.parent_uuid = opt_node.node_uuid
                 node.left        = opt_node.right
                 node.right       = opt_node.right + 1
-                tmp_model.query.filter(tmp_model.left>opt_node.right).update({tmp_model.left:tmp_model.left+2})
-                tmp_model.query.filter(tmp_model.right>=opt_node.right).update({tmp_model.right:tmp_model.right+2})
-                tmp_session.add(node)
-                tmp_session.commit()
-                return True
+                try:
+                    tmp_model.query.filter(tmp_model.left>opt_node.right).update({tmp_model.left:tmp_model.left+2})
+                    tmp_model.query.filter(tmp_model.right>=opt_node.right).update({tmp_model.right:tmp_model.right+2})
+                    tmp_session.add(node)
+                    tmp_session.commit()
+                except SQLAlchemyError as e:
+                    return False, e.message
+                return True, ""
     """delete node and children"""
     def delete_node(self, node_uuid=None):
         tmp_session = self.__session
@@ -47,15 +62,22 @@ class TreeManager:
         if node_uuid is None:
             return False
         else:
-            node = tmp_model.query.filter(tmp_model.node_uuid==node_uuid).one()
+            node = None
+            try:
+                node = tmp_model.query.filter(tmp_model.node_uuid==node_uuid).one()
+            except SQLAlchemyError as e:
+                return False, e.message
             if node is None:
-                return False
+                return False, "invalid node_uuid."
             else:
-                tmp_model.query.filter(tmp_model.left>=node.left,tmp_model.right<=node.right).delete()
-                tmp_model.query.filter(tmp_model.left>node.right).update({tmp_model.left:tmp_model.left-(node.right-node.left)-1})
-                tmp_model.query.filter(tmp_model.right>node.right).update({tmp_model.right:tmp_model.right-(node.right-node.left)-1})
-                tmp_session.commit()
-                return True
+                try:
+                    tmp_model.query.filter(tmp_model.left>=node.left,tmp_model.right<=node.right).delete()
+                    tmp_model.query.filter(tmp_model.left>node.right).update({tmp_model.left:tmp_model.left-(node.right-node.left)-1})
+                    tmp_model.query.filter(tmp_model.right>node.right).update({tmp_model.right:tmp_model.right-(node.right-node.left)-1})
+                    tmp_session.commit()
+                except SQLAlchemyError as e:
+                    return False, e.message
+                return True, ""
     def delete_nodes(self, node_uuids=None):
         if not isinstance(node_uuids, list):
             return False
@@ -68,23 +90,39 @@ class TreeManager:
         tmp_session = self.__session
         tmp_model   = self.__model
         if node_uuid is None:
-            return None
+            return False, "invalid node_uuid."
         else:
-            node = tmp_model.query.filter(tmp_model.node_uuid==node_uuid).first()
+            try:
+                node = tmp_model.query.filter(tmp_model.node_uuid==node_uuid).first()
+            except SQLAlchemyError as e:
+                return False, e.message
             if many:
+                nodes = None
                 if parents:
-                    return tmp_model.query.filter(tmp_model.node_uuid==node.parent_uuid).all()
+                    try:
+                        nodes = tmp_model.query.filter(tmp_model.node_uuid==node.parent_uuid).all()
+                    except SQLAlchemyError as e:
+                        return False, "find parents nodes failed."
+                    return True, nodes
                 else:
-                    return tmp_model.query.filter(tmp_model.parent_uuid==node.node_uuid).all()
+                    try:
+                        nodes = tmp_model.query.filter(tmp_model.parent_uuid==node.node_uuid).all()
+                    except SQLAlchemyError as e:
+                        return False, "find children nodes failed."
+                    return True, nodes
             else:
-                return node
+                return True, node
     """update node"""
     def update_node(self, node=None):
         tmp_session = self.__session
         if node is None:
             return False
         else:
-            tmp_session.commit()
+            try:
+                tmp_session.commit()
+            except SQLAlchemyError as e:
+                return False, e._message
+            return True, ""
 
 class TreeMixin:
     node_uuid       = db.Column(db.String(36), primary_key=True)

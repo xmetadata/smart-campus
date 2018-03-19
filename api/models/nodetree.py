@@ -12,9 +12,15 @@ class NodeTree(db.Model, TreeMixin):
 
 #edit
 ##basic schema
-class BasicSchema(ma.Schema):
+class NodeSchema(ma.Schema):
     class Meta:
         fields = ('title','is_student', 'patriarch')
+
+class TreeListSchema(ma.Schema):
+    class Meta:
+        fields = ('title', 'node_uuid', 'children')
+    children = ma.Nested(NodeSchema)
+
 ##OUT->list node
 class ListSchema(ma.Schema):
     class Meta:
@@ -24,4 +30,4 @@ class ListSchema(ma.Schema):
 class BasicEditSchema(ma.Schema):
     class Meta:
         fields = ('action', 'node')
-    node = ma.Nested(BasicSchema)
+    node = ma.Nested(NodeSchema)
