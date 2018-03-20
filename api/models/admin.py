@@ -9,11 +9,11 @@ import datetime
 
 admin_m2m_node = db.Table('admin_m2m_node',
                     db.Column('vip_uuid', db.String(36), db.ForeignKey('Admin.uuid')),
-                    db.Column('node_uuid', db.String(36), db.ForeignKey(NodeTree.node_uuid)))
+                    db.Column('node_uuid', db.String(36), db.ForeignKey('NodeTree.node_uuid')))
 
 class Admin(db.Model, CRUD):
     __tablename__   = "Admin"
-    uuid            = db.Column(db.String(36), primary_key=True, default=uuid.uuid1())
+    uuid            = db.Column(db.String(36), primary_key=True)
     phone_number    = db.Column(db.String(11), nullable=False)
     hash_password   = db.Column(db.String(128), nullable=False)
     open_id         = db.Column(db.String(30))
@@ -22,7 +22,7 @@ class Admin(db.Model, CRUD):
     is_active       = db.Column(db.Boolean, default=False)
     c_time          = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     l_time          = db.Column(db.DateTime)
-    students        = db.relationship('NodeTree', secondary=admin_m2m_node, lazy="dynamic")
+    nodes           = db.relationship('NodeTree', secondary=admin_m2m_node, lazy="dynamic", backref=db.backref('users', lazy='joined'))
 
     @property
     def password(self):
@@ -43,14 +43,6 @@ class Admin(db.Model, CRUD):
     def find_by_uuid(cls, uuid):
         return cls.query.filter(cls.uuid==uuid).first()
 
-    @classmethod
-    def find_node_by_uuid(cls, uuid):
-        nodes = None
-        try:
-            nodes = cls.query.filter(cls.students.node_uuid==uuid).add()
-        except SQLAlchemyError as e:
-            return False, e.message
-        return True, nodes
 class LoginSchema(ma.Schema):
     class Meta:
         fields = ('phone_number','password','user_type')

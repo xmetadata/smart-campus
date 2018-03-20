@@ -1,3 +1,4 @@
+from sqlalchemy.exc import SQLAlchemyError
 from common.database import db
 from common.satree import TreeMixin
 from common.schema import ma
@@ -12,9 +13,12 @@ class NodeTree(db.Model, TreeMixin):
 
 #edit
 ##basic schema
-class NodeSchema(ma.Schema):
+class InNodeSchema(ma.Schema):
     class Meta:
         fields = ('title','is_student', 'patriarch')
+class OutNodeSchema(ma.Schema):
+    class Meta:
+        fields = ('title', 'is_student', 'node_uuid')
 
 ##OUT->list node
 class ListSchema(ma.Schema):
